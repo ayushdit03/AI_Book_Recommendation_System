@@ -1,0 +1,7 @@
+Flask
+pandas
+numpy
+nltk
+scikit-learn
+pymongo
+dnspython
