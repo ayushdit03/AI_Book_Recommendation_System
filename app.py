@@ -11,7 +11,7 @@ new_df = pd.read_csv("Final_ai.csv")
 app = Flask(__name__, static_url_path='/static')
 
 # MongoDB configuration   id pj29102005 pass bTQfPPqugcyv9mv8
-client = MongoClient("mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient("mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/test?retryWrites=true&w=majority")
 db = client['library']
 books_collection = db['books_data']
 feedback_collection = db['feedback']  # Ensure this matches the collection name in MongoDB Atlas
