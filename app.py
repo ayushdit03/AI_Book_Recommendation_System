@@ -25,19 +25,20 @@ db = client['library']
 books_collection = db['books_data']
 feedback_collection = db['feedback']
 
-# Read CSV file
+# Fetch data from MongoDB
 try:
-    new_df = pd.read_csv("Final_ai.csv")
-    logging.info(f"CSV file loaded successfully: {new_df.head()}")
-except FileNotFoundError as e:
-    logging.error(f"CSV file not found: {e}")
-    new_df = pd.DataFrame()  # Use an empty dataframe if file is not found
+    books_data = list(books_collection.find())
+    new_df = pd.DataFrame(books_data)
+    logging.info(f"Books data fetched from MongoDB: {new_df.head()}")
+except Exception as e:
+    logging.error(f"Error fetching data from MongoDB: {e}")
+    new_df = pd.DataFrame()  # Use an empty dataframe if data fetching fails
 
 # Ensure 'books' column exists and handle NaN values
 if 'books' in new_df.columns:
     new_df['books'] = new_df['books'].fillna('')
 else:
-    logging.error("Column 'books' not found in CSV file.")
+    logging.error("Column 'books' not found in MongoDB data.")
     new_df['books'] = ''
 
 # Initialize vectorizer and compute vectors
