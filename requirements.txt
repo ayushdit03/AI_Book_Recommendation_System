@@ -6,3 +6,4 @@ scikit-learn
 pymongo
 dnspython
 certifi
+gunicorn
