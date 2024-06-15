@@ -6,3 +6,4 @@ scikit-learn
 pymongo
 dnspython
 gunicorn==20.1.0
+certifi
