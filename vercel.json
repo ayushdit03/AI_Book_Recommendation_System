@@ -1,12 +1,19 @@
 {
   "version": 2,
   "builds": [
-    { "src": "app.py", "use": "@now/python" }
+    {
+      "src": "./app.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "includeFiles": ["ca-certificate.crt"]
+      }
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "app.py" }
-  ],
-  "env": {
-    "MONGO_URI": "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  }
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ]
 }
