@@ -5,7 +5,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem.porter import PorterStemmer
 from pymongo import MongoClient
-import certifi
 import os
 import logging
 
@@ -16,13 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 # MongoDB configuration
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-client = MongoClient(
-    MONGO_URI,
-    tls=True,
-    tlsAllowInvalidCertificates=True,
-    tlsCAFile=certifi.where(),
-    serverSelectionTimeoutMS=30000
-)
+client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=30000)
 db = client['library']
 books_collection = db['books_data']
 feedback_collection = db['feedback']
