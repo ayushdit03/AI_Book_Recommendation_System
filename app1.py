@@ -1,62 +1,88 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+# app.py
+
+from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
-from nltk.stem.porter import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
+from nltk.stem.porter import PorterStemmer
 from pymongo import MongoClient
+import os
 import certifi
-
-new_df = pd.read_csv("Final_ai.csv")
+import logging
 
 app = Flask(__name__, static_url_path='/static')
 
-# MongoDB configuration
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+# MongoDB configuration with SSL options and CA certificate
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/library?retryWrites=true&w=majority&appName=Cluster0")
 client = MongoClient(
-    "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    MONGO_URI,
     tls=True,
-    tlsCAFile=certifi.where()
+    tlsCAFile=certifi.where(),
+    serverSelectionTimeoutMS=30000
 )
 db = client['library']
 books_collection = db['books_data']
 feedback_collection = db['feedback']
 
+# Fetch data from MongoDB
+try:
+    books_data = list(books_collection.find())
+    new_df = pd.DataFrame(books_data)
+    logging.info(f"Books data fetched from MongoDB: {new_df.head()}")
+except Exception as e:
+    logging.error(f"Error fetching data from MongoDB: {e}")
+    new_df = pd.DataFrame()  # Use an empty dataframe if data fetching fails
+
+# Ensure 'books' column exists and handle NaN values
+if 'books' in new_df.columns:
+    new_df['books'] = new_df['books'].fillna('')
+else:
+    logging.error("Column 'books' not found in MongoDB data.")
+    new_df['books'] = ''
+
+# Initialize vectorizer and compute vectors
+cv = CountVectorizer(max_features=5000, stop_words="english")
+vectors = np.array([])
+similar = np.array([])
+
+if not new_df.empty:
+    try:
+        vectors = cv.fit_transform(new_df['books']).toarray()
+        similar = cosine_similarity(vectors)
+        logging.info("Vectorization and similarity computation successful.")
+    except Exception as e:
+        logging.error(f"Error initializing vectorizer or computing vectors: {e}")
+
+ps = PorterStemmer()
+
+def stem(text):
+    return " ".join([ps.stem(word) for word in text.split()])
+
 @app.route('/')
 def home():
-    data = list(books_collection.find({"rating": 5}).sort("rating", 1).limit(8))
-    author_names = [row['books'] for row in data]
-    genre = [row['mod_title'] for row in data]
-    image = [row['img'] for row in data]
-    rating = [row['rating'] for row in data]
-    title = [row['mod_title'] for row in data]
-    
-    return render_template('home.html', total_data=data,
-                           author_data=author_names,
-                           image_data=image,
-                           title_data=title,
-                           rating_data=rating,
-                           genre_data=genre)
+    try:
+        data = list(books_collection.find({"rating": 5}).sort("rating", 1).limit(8))
+        return render_template('home.html', total_data=data,
+                               author_data=[row['books'] for row in data],
+                               image_data=[row['img'] for row in data],
+                               title_data=[row['mod_title'] for row in data],
+                               rating_data=[row['rating'] for row in data],
+                               genre_data=[row['mod_title'] for row in data])
+    except Exception as e:
+        logging.error(f"Error in home route: {e}")
+        return "Internal Server Error", 500
 
 @app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
     data = []
     error = False
     if request.method == 'POST':
-        title_input = request.form.get('title_input', 'None')
-        print(title_input)
-
-        cv = CountVectorizer(max_features=5000, stop_words="english")
-        cv.fit_transform(new_df['books']).toarray().shape
-        vectors = cv.fit_transform(new_df['books']).toarray()
-
-        similar = cosine_similarity(vectors)
-        ps = PorterStemmer()
-
-        def stem(text):
-            y = []
-            for i in text.split():
-                y.append(ps.stem(i))
-            return " ".join(y)
+        title_input = request.form.get('title_input', 'None').strip()
+        logging.info(f"Title input: {title_input}")
 
         def recommend_fun(book):
             recommended_books = []
@@ -66,19 +92,23 @@ def recommend():
                 book_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
 
                 for i in book_list:
-                    item = []
-                    item.extend(list([new_df.iloc[i[0]].mod_title]))
-                    item.extend(list([new_df.iloc[i[0]].img]))
-                    item.extend(list([new_df.iloc[i[0]].rating]))
-                    item.extend(list([new_df.iloc[i[0]].books]))
-                    recommended_books.append(item)
+                    recommended_books.append([
+                        new_df.iloc[i[0]].mod_title,
+                        new_df.iloc[i[0]].img,
+                        new_df.iloc[i[0]].rating,
+                        new_df.iloc[i[0]].books
+                    ])
                 return recommended_books
 
             except (IndexError, KeyError) as e:
-                print('\n\n', f"Exception occurred: {e}")
+                logging.error(f"Exception in recommend_fun: {e}")
+                return None
 
-        data = recommend_fun(title_input)
-        print('\n', "data: ", data, '\n')
+        if not new_df.empty:
+            data = recommend_fun(title_input)
+            logging.info(f"Recommendation data: {data}")
+        else:
+            logging.error("Dataframe is empty, cannot perform recommendation.")
 
         if data is None:
             error = True
@@ -88,24 +118,22 @@ def recommend():
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     if request.method == 'POST':
-        title = request.form['title']
-        author = request.form['author']
-        genre = request.form['genre']
-        rating = request.form['rating']
-        img_url = request.form['img-url']
-        
-        feedback_collection.insert_one({
-            'title': title,
-            'author': author,
-            'genre': genre,
-            'img_url': img_url,
-            'rating': rating
-        })
-        
-        print("successful")
-        return redirect(url_for('home'))
+        try:
+            feedback_collection.insert_one({
+                'title': request.form['title'],
+                'author': request.form['author'],
+                'genre': request.form['genre'],
+                'img_url': request.form['img-url'],
+                'rating': request.form['rating']
+            })
+            logging.info("Feedback successfully submitted")
+            return redirect(url_for('home'))
+        except Exception as e:
+            logging.error(f"Error submitting feedback: {e}")
+            return "Internal Server Error", 500
 
     return render_template('feedback.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))  # Use PORT environment variable if available
+    app.run(debug=True, host='0.0.0.0', port=port)
