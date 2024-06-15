@@ -15,7 +15,7 @@ app = Flask(__name__, static_url_path='/static')
 logging.basicConfig(level=logging.INFO)
 
 # MongoDB configuration
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 client = MongoClient(
     MONGO_URI,
     tls=True,
