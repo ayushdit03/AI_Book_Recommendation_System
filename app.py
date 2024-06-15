@@ -6,14 +6,15 @@ from nltk.stem.porter import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 from pymongo import MongoClient
 import certifi
+import os 
 
-new_df = pd.read_csv("Final_ai.csv")
 
 app = Flask(__name__, static_url_path='/static')
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # MongoDB configuration
 client = MongoClient(
-    "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+        MONGO_URI,
     tls=True,
     tlsCAFile=certifi.where()
 )
