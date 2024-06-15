@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 import numpy as np
@@ -15,7 +17,7 @@ app = Flask(__name__, static_url_path='/static')
 logging.basicConfig(level=logging.INFO)
 
 # MongoDB configuration with SSL options and CA certificate
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://username:password@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/library?retryWrites=true&w=majority&appName=Cluster0")
 client = MongoClient(
     MONGO_URI,
     tls=True,
