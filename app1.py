@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.stem.porter import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 from pymongo import MongoClient
+import certifi
 
 new_df = pd.read_csv("Final_ai.csv")
 
@@ -14,7 +15,7 @@ app = Flask(__name__, static_url_path='/static')
 client = MongoClient(
     "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     tls=True,
-    tlsCAFile="./ca-certificate.crt"
+    tlsCAFile=certifi.where()
 )
 db = client['library']
 books_collection = db['books_data']
