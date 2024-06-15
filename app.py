@@ -15,11 +15,13 @@ app = Flask(__name__, static_url_path='/static')
 logging.basicConfig(level=logging.INFO)
 
 # MongoDB configuration
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true")
 client = MongoClient(
     MONGO_URI,
     tls=True,
-    tlsCAFile=certifi.where()
+    tlsAllowInvalidCertificates=True,
+    tlsCAFile=certifi.where(),
+    serverSelectionTimeoutMS=30000
 )
 db = client['library']
 books_collection = db['books_data']
@@ -132,4 +134,5 @@ def feedback():
     return render_template('feedback.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))  # Use PORT environment variable if available
+    app.run(debug=True, host='0.0.0.0', port=port)
