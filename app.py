@@ -14,7 +14,7 @@ app = Flask(__name__, static_url_path='/static')
 client = MongoClient(
     "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     tls=True,
-    tlsCAFile="./ca-certificate.crt"
+    tlsCAFile="/ca-certificate.crt"
 )
 db = client['library']
 books_collection = db['books_data']
