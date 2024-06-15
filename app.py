@@ -5,22 +5,25 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.stem.porter import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 from pymongo import MongoClient
-import pymongo
 
 new_df = pd.read_csv("Final_ai.csv")
 
 app = Flask(__name__, static_url_path='/static')
 
-# MongoDB configuration   id pj29102005 pass bTQfPPqugcyv9mv8
-client = MongoClient("mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+# MongoDB configuration
+client = MongoClient(
+    "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    tls=True,
+    tlsCAFile="./ca-certificate.crt"
+)
 db = client['library']
 books_collection = db['books_data']
-feedback_collection = db['feedback']  # Ensure this matches the collection name in MongoDB Atlas
+feedback_collection = db['feedback']
 
 @app.route('/')
 def home():
     data = list(books_collection.find({"rating": 5}).sort("rating", 1).limit(8))
-    author_names = [row['books'] for row in data]  # Assuming 'books' is the author column in your CSV
+    author_names = [row['books'] for row in data]
     genre = [row['mod_title'] for row in data]
     image = [row['img'] for row in data]
     rating = [row['rating'] for row in data]
