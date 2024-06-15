@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem.porter import PorterStemmer
 from pymongo import MongoClient
 import os
+import certifi
 import logging
 
 app = Flask(__name__, static_url_path='/static')
@@ -13,9 +14,14 @@ app = Flask(__name__, static_url_path='/static')
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-# MongoDB configuration
+# MongoDB configuration with SSL options and CA certificate
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://username:password@cluster0.9nt5ygc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=30000)
+client = MongoClient(
+    MONGO_URI,
+    tls=True,
+    tlsCAFile=certifi.where(),
+    serverSelectionTimeoutMS=30000
+)
 db = client['library']
 books_collection = db['books_data']
 feedback_collection = db['feedback']
