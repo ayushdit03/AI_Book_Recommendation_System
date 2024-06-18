@@ -14,15 +14,15 @@ client = MongoClient(MONGO_URI)
 db = client['library']
 feedback_collection = db['feedback']
 
-# Read CSV file
+# Read CSV file (Load a subset of data to save memory)
 try:
-    new_df = pd.read_csv("Final_ai.csv")
+    new_df = pd.read_csv("Final_ai.csv", usecols=['books', 'img', 'mod_title', 'rating'], nrows=1000)
 except FileNotFoundError as e:
     print(f"Error: {e}")
     new_df = pd.DataFrame()  # Use an empty dataframe if file is not found
 
-# Initialize vectorizer and compute vectors
-cv = CountVectorizer(max_features=5000, stop_words="english")
+# Initialize vectorizer with limited features
+cv = CountVectorizer(max_features=100, stop_words="english")
 vectors = cv.fit_transform(new_df['books']).toarray()
 similar = cosine_similarity(vectors)
 
