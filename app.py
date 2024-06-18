@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem.porter import PorterStemmer
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 import os
 
 app = Flask(__name__, static_url_path='/static')
@@ -22,7 +22,7 @@ except FileNotFoundError as e:
     new_df = pd.DataFrame()  # Use an empty dataframe if file is not found
 
 # Initialize vectorizer with limited features
-cv = CountVectorizer(max_features=100, stop_words="english")
+cv = CountVectorizer(max_features=1000, stop_words="english")
 vectors = cv.fit_transform(new_df['books']).toarray()
 similar = cosine_similarity(vectors)
 
@@ -84,15 +84,32 @@ def recommend():
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     if request.method == 'POST':
-        feedback_collection.insert_one({
-            'title': request.form['title'],
-            'author': request.form['author'],
-            'genre': request.form['genre'],
-            'img_url': request.form['img-url'],
-            'rating': request.form['rating']
-        })
-        print("successful")
-        return redirect(url_for('home'))
+        try:
+            feedback_data = {
+                'title': request.form.get('title', '').strip(),
+                'author': request.form.get('author', '').strip(),
+                'genre': request.form.get('genre', '').strip(),
+                'img_url': request.form.get('img-url', '').strip(),
+                'rating': request.form.get('rating', '').strip()
+            }
+
+            # Ensure all fields are provided
+            if not all(feedback_data.values()):
+                raise ValueError("All fields are required")
+
+            feedback_collection.insert_one(feedback_data)
+            print("Feedback successfully inserted")
+            return redirect(url_for('home'))
+        
+        except errors.PyMongoError as e:
+            print(f"PyMongo error: {e}")
+            return render_template('feedback.html', error="Database error. Please try again later.")
+        except ValueError as e:
+            print(f"Value error: {e}")
+            return render_template('feedback.html', error=str(e))
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return render_template('feedback.html', error="An unexpected error occurred. Please try again later.")
 
     return render_template('feedback.html')
 
