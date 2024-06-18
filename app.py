@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
-import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem.porter import PorterStemmer
@@ -18,7 +17,6 @@ client = MongoClient(
     tlsCAFile=certifi.where()
 )
 db = client['library']
-books_collection = db['books_data']
 feedback_collection = db['feedback']
 
 # Read CSV file
@@ -40,13 +38,19 @@ def stem(text):
 
 @app.route('/')
 def home():
-    data = list(books_collection.find({"rating": 5}).sort("rating", 1).limit(8))
-    return render_template('home.html', total_data=data,
-                           author_data=[row['books'] for row in data],
-                           image_data=[row['img'] for row in data],
-                           title_data=[row['mod_title'] for row in data],
-                           rating_data=[row['rating'] for row in data],
-                           genre_data=[row['mod_title'] for row in data])
+    # Simulate MongoDB data retrieval with CSV data for the home route
+    try:
+        data = new_df[new_df['rating'] == 5].sort_values(by="rating", ascending=False).head(8)
+    except KeyError as e:
+        print(f"Error: {e}")
+        data = pd.DataFrame()
+
+    return render_template('home.html', total_data=data.to_dict('records'),
+                           author_data=data['books'].tolist(),
+                           image_data=data['img'].tolist(),
+                           title_data=data['mod_title'].tolist(),
+                           rating_data=data['rating'].tolist(),
+                           genre_data=data['mod_title'].tolist())
 
 @app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
