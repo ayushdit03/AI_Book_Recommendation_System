@@ -4,16 +4,13 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.stem.porter import PorterStemmer
 from pymongo import MongoClient
-import certifi
 import os
 
 app = Flask(__name__, static_url_path='/static')
 
 # MongoDB configuration
 MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://pj29102005:bTQfPPqugcyv9mv8@cluster0.9nt5ygc.mongodb.net/library?retryWrites=true&w=majority&appName=Cluster0")
-client = MongoClient(
-    MONGO_URI,
-)
+client = MongoClient(MONGO_URI)
 db = client['library']
 feedback_collection = db['feedback']
 
@@ -102,4 +99,3 @@ def feedback():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
-
