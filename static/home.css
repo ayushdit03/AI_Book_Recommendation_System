@@ -1,52 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Croissant+One&display=swap');
 
-.body{
+.body {
     background-color: #DAC0A3;
 }
 
 .topnav {
     background-color: #FF6969;
     overflow: hidden;
-    position:fixed;
+    position: fixed;
     z-index: 1000;
     top: 0;
     width: 100%;
-  }
+}
 
-  .topnav a {
+.topnav a {
     float: left;
     color: #f2f2f2;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
-    
-  }
-  
-  .topnav a:hover {
+}
+
+.topnav a:hover {
     background-color: #C70039;
-    color:#ffffff;
-    font-weight: 800px;
-  }
-  
+    color: #ffffff;
+    font-weight: 800;
+}
 
-  .name{
-    font-size: 500%;
+.logo {
+    float: right;
+    margin-right: 20px;
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
     font-family: 'Croissant One', cursive;
-    font-weight: 300px;
-    text-shadow: 2px 3px 3px grey;
-    
-  }
+}
 
-  .centre{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 18px;
-    margin-top: 35px;
-  }
-
-  .float-container {
+.float-container {
     padding: 20px;
 }
 
@@ -54,98 +45,145 @@
     width: 50%;
     float: left;
     padding: 20px;
-    
-} 
-
-.float-child img{
-  padding-left: 80px;
-  width: 60%;
-  height: auto;
-  
 }
 
-.float-child h1{
-  display:flex ;
-  font-size:50px;
-  font-family:'Croissant One', cursive; 
-  padding-left: 10px;
-  padding-top: 70px;
-  text-shadow: 2px 2px 3px grey;
+.float-child img {
+    padding-left: 80px;
+    width: 60%;
+    height: auto;
 }
 
-.float-child pre{
-  font-size: 18px;
-  padding-top:15px;
-  padding-left: 30px;
-  font-family: "Golos Text", "Golos Text Placeholder", sans-serif;
+.float-child h1 {
+    display: flex;
+    font-size: 50px;
+    font-family: 'Croissant One', cursive;
+    padding-left: 10px;
+    padding-top: 70px;
+    text-shadow: 2px 2px 3px grey;
 }
 
-.topbook h1{
-  padding-top: 15px;
-  font-family: 'Croissant One', cursive;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  text-shadow: 2px 2px 3px grey;
+.float-child pre {
+    font-size: 18px;
+    padding-top: 15px;
+    padding-left: 30px;
+    font-family: "Golos Text", "Golos Text Placeholder", sans-serif;
 }
 
-.container row col-3{
-  margin-top: 30px;
+.get_start {
+    padding-top: 45px;
+    font-family: 'Croissant One', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px 3px grey;
 }
 
-.card{
-  background-color: #FF6969; /* Set the background color of the card */
-  border-radius: 10px; /* Rounded corners for the card */
-  box-shadow: 4px 5px 3px rgba(0, 0, 0, 0.3);
+.button {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+    padding-bottom: 50px;
 }
 
-.get_start{
-  padding-top: 45px;
-  font-family: 'Croissant One', cursive;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  text-shadow: 2px 2px 3px grey;
+.recommend_button {
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #141E46;
+    background-color: #FF6969;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
 }
 
-.button{
-  display: flex;
-  justify-content: center;
-  padding-top: 25px;
-  padding-bottom: 50px;
+.recommend_button:hover {
+    background-color: #C70039;
 }
-
-.recommend_button{
-  padding: 10px 20px;
-  text-align: center;
-  cursor: pointer;
-  outline: none;
-
-  color: #141E46;
-  background-color: #FF6969;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
-}
-
-.recommend_button:hover {background-color: #C70039}
 
 .recommend_button:active {
-  background-color: #C70039;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+    background-color: #C70039;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
 }
 
-.recommend_button h4{
-  text-shadow: 2px 2px 3px grey;
+.recommend_button h4 {
+    text-shadow: 2px 2px 3px grey;
 }
 
-.feedback{
-  display: flex;
-  justify-content: center;
+.topbook h1 {
+    padding-top: 15px;
+    font-family: 'Croissant One', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px 3px grey;
 }
 
-.feedback pre{
-  font-family:'Croissant One', cursive; 
-  font-size: 20px;
+.container row col-3 {
+    margin-top: 30px;
+}
+
+.card {
+    background-color: #FF6969;
+    border-radius: 10px;
+    box-shadow: 4px 5px 3px rgba(0, 0, 0, 0.3);
+}
+
+.get_start {
+    padding-top: 45px;
+    font-family: 'Croissant One', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px 3px grey;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+    padding-bottom: 50px;
+}
+
+.feedback {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 100px;
+}
+
+.feedback pre {
+    font-family: 'Croissant One', cursive;
+    font-size: 20px;
+}
+
+.footer {
+    background-color: #333333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer hr {
+    display: block;
+    margin: 8px auto;
+    border-style: inset;
+    border-width: 2px;
+}
+
+.footer p {
+    margin-bottom: 0;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
 }
