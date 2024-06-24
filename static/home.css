@@ -136,7 +136,7 @@
 .feedback {
     display: flex;
     justify-content: center;
-    padding-bottom: 100px;
+    padding-bottom: 20px;
 }
 
 .feedback pre {
@@ -148,7 +148,8 @@
     background-color: #100c08;
     color: white;
     text-align: center;
-    padding: 3px;
+    padding-top: 1px;
+    padding: 1px;
     position: fixed;
     left: 0;
     bottom: 0;
