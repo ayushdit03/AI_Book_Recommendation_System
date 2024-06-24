@@ -14,15 +14,12 @@
     />
 </head>
 <body class="body">
-    <div class="topnav">
+    <div class="topnav navbar">
         <a href="/"><strong>Home</strong></a>
         <a href="#about"><strong>About</strong></a>
         <a href="#recommend"><strong>Recommend</strong></a>
         <a href="#feedback"><strong>Feedback</strong></a>
-    </div>
-
-    <div class="name centre">
-        <p>BOOKVIBER</p>
+        <span class="logo">BOOKVIBER</span>
     </div>
 
     <div class="float-container" id="about">
@@ -41,10 +38,7 @@
         </div>
     </div>
 
-    <div style="clear: both"></div>
-  
-      <div class="get_start"><h1>Get Started!</h1></div>
-
+    <div class="get_start"><h1>Get Started!</h1></div>
 
     <div class="button" id="recommend">
         <form action="/recommend" method="get">
@@ -76,7 +70,6 @@
         </div>
     </div>
 
-
     <div class="button" id="feedback">
         <form action="/feedback" method="get">
             <button type="submit" class="recommend_button">
@@ -84,7 +77,6 @@
             </button>
         </form>
     </div>
-  
 
     <div class="feedback">
         <pre>"Your feedback is the key to unlocking the world of books for fellow readers.
@@ -102,30 +94,5 @@
             </a>
         </p>
     </div>
-
-
-<style>
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        .stApp { bottom: 105px; }
-        .footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            margin: 0;
-            width: 100%;
-            color: white;
-            text-align: center;
-            height: auto;
-            opacity: 1;
-        }
-        .footer hr {
-            display: block;
-            margin: 8px auto;
-            border-style: inset;
-            border-width: 2px;
-        }
-    </style>
-  
 </body>
 </html>
